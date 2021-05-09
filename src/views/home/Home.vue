@@ -3,7 +3,8 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll" :pull-up-load="true"
+    @pullingUp="loadMore">
       <home-swiper :banners="banners"/>
       <home-recommend-view :recommends="recommends"/>
       <home-feature/>
@@ -91,15 +92,17 @@
         this.$refs.scroll.scrollTo(0, 0)
         //后面的500是设置500ms内返回动画
       },
-      /**
-       *判断滚动条到哪里了，到了一定位置显示返回顶部图标
-       **/
+      //判断滚动条到哪里了，到了一定位置显示返回顶部图标
       contentScroll(position){
         // console.log(position);
         //因为position.y是负值，不加负号永远不会大于1000
         this.isShowBackTop = -(position.y)>1000
       },
-
+      //上拉加载获取更多
+      loadMore(){
+        console.log(this.currentType);
+        this.getHomeGoods(this.currentType)
+      },
 
       /**
        * 网络请求封装方法
@@ -113,6 +116,7 @@
       },
       getHomeGoods(type){
         const page = this.goods[type].page + 1
+        // console.log(page);
         getHomeGoods(type,page).then(res=>{
           // console.log(res);
           this.goods[type].list.push(...res.data.list)
