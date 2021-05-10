@@ -91,6 +91,7 @@
         //2、用ref拿到scroll组件，获取到里面的scrollTo方法（已经封装好）
         this.$refs.scroll.scrollTo(0, 0)
         //后面的500是设置500ms内返回动画
+        this.$refs.scroll.scroll.reflash()
       },
       //判断滚动条到哪里了，到了一定位置显示返回顶部图标
       contentScroll(position){
@@ -102,6 +103,8 @@
       loadMore(){
         console.log(this.currentType);
         this.getHomeGoods(this.currentType)
+        //调用finishPullUp才可以刷新多次
+        this.$refs.scroll.finishPullUp()
       },
 
       /**
