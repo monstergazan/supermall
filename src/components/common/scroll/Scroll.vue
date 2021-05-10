@@ -20,7 +20,7 @@
         pullUpLoad: {
           type: Boolean,
           default: false
-        }
+        },
       }
     },
     mounted() {
@@ -28,6 +28,8 @@
       this.scroll = new BScroll(this.$refs.wrapper, {
         observeDOM: true,
         //2.0方法需要加这个才可以滚动，我日
+        observeImage: true,
+        observeDom: true,
         click: true,
         mouseWheel: true,
         pullUpLoad: this.pullUpLoad,

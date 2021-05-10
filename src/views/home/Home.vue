@@ -10,7 +10,8 @@
       <home-feature/>
       <tab-control :titles="['流行','新款','精选']"
                    class="tab-control"
-                   @tabClick="tabClick"/>
+                   @tabClick="tabClick"
+                   ref="tabControl"/>
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"/>
@@ -51,7 +52,8 @@
           'sell': {page: 0, list: []}
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0
       }
     },
     computed: {
@@ -62,9 +64,21 @@
     created() {
       //1.请求多个数据
       this.getHomeMultidata()
+      //2.请求商品数据
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
+    },
+    beforeUpdate() {
+      // console.log(this.$refs.tabControl.$el.offsetTop);
+    },
+    mounted() {
+      //获取tabControl的offsetTop
+      //所有的组件都有一个属性$el:用于获取组件中的元素
+      // console.log(this.$refs.tabControl.$el.offsetTop);
+    },
+    destroyed() {
+      console.log('home destory');
     },
     methods: {
       /**
@@ -91,7 +105,7 @@
         //2、用ref拿到scroll组件，获取到里面的scrollTo方法（已经封装好）
         this.$refs.scroll.scrollTo(0, 0)
         //后面的500是设置500ms内返回动画
-        this.$refs.scroll.scroll.reflash()
+        // this.$refs.scroll.scroll.refresh()
       },
       //判断滚动条到哪里了，到了一定位置显示返回顶部图标
       contentScroll(position){
@@ -101,7 +115,7 @@
       },
       //上拉加载获取更多
       loadMore(){
-        console.log(this.currentType);
+        // console.log(this.currentType);
         this.getHomeGoods(this.currentType)
         //调用finishPullUp才可以刷新多次
         this.$refs.scroll.finishPullUp()
@@ -124,8 +138,10 @@
           // console.log(res);
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
+          // this.$refs.scroll.finishPullUp()
         })
       },
+
     }
   }
 </script>
@@ -148,8 +164,8 @@
   }
   .tab-control {
     /*position: sticky;*/
-    top: 44px;
-    z-index: 9;
+    /*top: 44px;*/
+    /*z-index: 9;*/
   }
   .content {
     /*height: 400px;*/
