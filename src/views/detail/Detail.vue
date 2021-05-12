@@ -14,6 +14,7 @@
       <goods-list ref="recommend" :goods="recommends"/>
     </scroll>
     <detail-bottom-bar class="bottom-bar" @addCart="addToCart"></detail-bottom-bar>
+    <toast :message="message" :show="show"></toast>
   </div>
 </template>
 
@@ -29,7 +30,7 @@
   import DetailBottomBar from "./childComps/DetailBottomBar";
   import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail';
   import Scroll from "components/common/scroll/Scroll";
-
+  import Toast from "components/common/toast/Toast";
   export default {
     components: {
       DetailCommentInfo,
@@ -41,7 +42,8 @@
       DetailGoodsInfo,
       DetailParamInfo,
       GoodsList,
-      DetailBottomBar
+      DetailBottomBar,
+      Toast
     },
     name: "Detail",
     data(){
@@ -56,7 +58,9 @@
         recommends:[],
         themeTopYs: [],
         getThemeTopYs: null,
-        currentIndex: 0
+        currentIndex: 0,
+        message: ' ',
+        show: false
       }
     },
     created() {
@@ -151,7 +155,13 @@
         // this.$store.cartList.push()
         // this.$store.commit('addCart',product)
         this.$store.dispatch('addCart',product).then(res=>{
-          console.log(res);
+          this.show = true;
+          this.message = res;
+          // console.log(res);
+          setTimeout(()=>{
+            this.show = false
+            this.message = ' '
+          },1500)
         })
 
         //3.添加到购物车成功
