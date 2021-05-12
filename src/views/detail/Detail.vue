@@ -2,6 +2,9 @@
   <div id="detail">
     <detail-navbar ref="nav" class="detail-nav" @titleClick="titleClick"/>
     <scroll class="content" ref="scroll" @scroll="contentScroll" probe-type="3">
+<!--      <ul>-->
+<!--        <li v-for="i in this.$store.state.cartList">{{i}}</li>-->
+<!--      </ul>-->
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"></detail-shop-info>
@@ -136,14 +139,23 @@
 
       },
       addToCart(){
+        // console.log(111);
         //1.获取购物车展示的信息
         const product={}
         product.image = this.topImages[0];
-        product.title = this.goodsInfo.title;
-        product.desc = this.goodsInfo.desc;
-        product.price = this.goodsInfo.realPrice
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.realPrice
         product.iid = this.iid
         //2.将商品添加进购物车 用vuex
+        // this.$store.cartList.push()
+        // this.$store.commit('addCart',product)
+        this.$store.dispatch('addCart',product).then(res=>{
+          console.log(res);
+        })
+
+        //3.添加到购物车成功
+
 
       }
     }
